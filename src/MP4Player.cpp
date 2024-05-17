@@ -5,14 +5,14 @@ MP4Player::MP4Player()
     : formatContext(nullptr), videoCodecContext(nullptr), audioCodecContext(nullptr),
       swsContext(nullptr), swrContext(nullptr), videoStreamIndex(-1), audioStreamIndex(-1),
       window(nullptr), renderer(nullptr), texture(nullptr), audioDeviceID(0) {
-    // Initialize SDL
+    
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) < 0) {
         std::cerr << "SDL initialization failed: " << SDL_GetError() << std::endl;
     }
 }
 
 MP4Player::~MP4Player() {
-    // Clean up resources
+    
     if (videoCodecContext) {
         avcodec_free_context(&videoCodecContext);
     }
@@ -107,8 +107,8 @@ void MP4Player::play() {
 }
 
 void MP4Player::stop() {
-    // Stop playback and clean up resources
-    // ...
+    
+    
 }
 
 bool MP4Player::initializeVideo() {
@@ -139,7 +139,7 @@ bool MP4Player::initializeVideo() {
 }
 
 bool MP4Player::initializeAudio() {
-    // Set up SDL audio
+    
     SDL_AudioSpec desiredSpec;
     desiredSpec.freq = audioCodecContext->sample_rate;
     desiredSpec.format = AUDIO_S16SYS;
@@ -155,7 +155,7 @@ bool MP4Player::initializeAudio() {
         return false;
     }
 
-    // Initialize the audio resampling context
+    
     swrContext = swr_alloc_set_opts(nullptr,
                                     av_get_default_channel_layout(audioSpec.channels),
                                     AV_SAMPLE_FMT_S16,
@@ -174,7 +174,7 @@ bool MP4Player::initializeAudio() {
         return false;
     }
 
-    // Start playing audio
+    
     SDL_PauseAudioDevice(audioDeviceID, 0);
 
     return true;
@@ -197,7 +197,7 @@ void MP4Player::decodeVideoFrame(AVPacket* packet) {
             break;
         }
 
-        // Convert frame to YV12 format
+        
         AVFrame* yv12Frame = av_frame_alloc();
         av_image_alloc(yv12Frame->data, yv12Frame->linesize, videoCodecContext->width, videoCodecContext->height, AV_PIX_FMT_YUV420P, 1);
         swsContext = sws_getContext(videoCodecContext->width, videoCodecContext->height, videoCodecContext->pix_fmt,
@@ -206,7 +206,7 @@ void MP4Player::decodeVideoFrame(AVPacket* packet) {
         sws_scale(swsContext, frame->data, frame->linesize, 0, videoCodecContext->height,
                   yv12Frame->data, yv12Frame->linesize);
 
-        // Render frame using SDL
+        
         SDL_UpdateYUVTexture(texture, nullptr,
                              yv12Frame->data[0], yv12Frame->linesize[0],
                              yv12Frame->data[1], yv12Frame->linesize[1],
@@ -238,7 +238,7 @@ void MP4Player::decodeAudioFrame(AVPacket* packet) {
             break;
         }
 
-        // Convert audio frame to SDL format
+        
         uint8_t* audioBuffer = nullptr;
         int audioBufferSize = 0;
         int bufferSize = av_samples_get_buffer_size(nullptr, audioCodecContext->channels,
@@ -248,7 +248,7 @@ void MP4Player::decodeAudioFrame(AVPacket* packet) {
                                            (const uint8_t**)(frame->data), frame->nb_samples);
         audioBufferSize = convertedSamples * audioCodecContext->channels * sizeof(int16_t);
 
-        // Play audio using SDL
+        
         SDL_QueueAudio(audioDeviceID, audioBuffer, audioBufferSize);
         av_free(audioBuffer);
 
