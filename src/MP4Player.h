@@ -1,3 +1,4 @@
+// MP4Player.h
 #ifndef MP4PLAYER_H
 #define MP4PLAYER_H
 
@@ -8,6 +9,8 @@ extern "C" {
 #include <libswscale/swscale.h>
 #include <libswresample/swresample.h>
 }
+
+#include <SDL2/SDL.h>
 
 class MP4Player {
 public:
@@ -26,6 +29,13 @@ private:
     SwrContext* swrContext;
     int videoStreamIndex;
     int audioStreamIndex;
+
+    SDL_Window* window;
+    SDL_Renderer* renderer;
+    SDL_Texture* texture;
+
+    SDL_AudioDeviceID audioDeviceID;
+    SDL_AudioSpec audioSpec;
 
     bool initializeVideo();
     bool initializeAudio();

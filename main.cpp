@@ -10,7 +10,6 @@ int main(int argc, char* argv[]) {
     const char* filename = argv[1];
 
     MP4Player player;
-
     if (!player.openFile(filename)) {
         std::cerr << "Failed to open file: " << filename << std::endl;
         return -1;
@@ -18,6 +17,7 @@ int main(int argc, char* argv[]) {
 
     std::cout << "Playing " << filename << "..." << std::endl;
     player.play();
+    std::cout << "Playback finished." << std::endl;
 
     return 0;
 }

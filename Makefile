@@ -7,8 +7,8 @@ OBJ_DIR = obj
 
 # Compilador e flags
 CXX = g++
-CXXFLAGS = -std=c++11 -Wall -I$(SRC_DIR) `pkg-config --cflags libavformat libavcodec libavutil libswscale libswresample`
-LDFLAGS = `pkg-config --libs libavformat libavcodec libavutil libswscale libswresample`
+CXXFLAGS = -std=c++11 -Wall -g -I$(SRC_DIR) `pkg-config --cflags libavformat libavcodec libavutil libswscale libswresample sdl2`
+LDFLAGS = `pkg-config --libs libavformat libavcodec libavutil libswscale libswresample sdl2`
 
 # Arquivos fonte e objetos
 SRCS = main.cpp $(SRC_DIR)/MP4Player.cpp
